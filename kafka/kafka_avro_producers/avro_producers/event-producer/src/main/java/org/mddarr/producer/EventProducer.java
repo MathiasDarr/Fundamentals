@@ -112,7 +112,7 @@ public class EventProducer {
             AvroTimeSeriesDataPoint avroTimeSeriesDataPoint = new AvroTimeSeriesDataPoint(UUID.randomUUID().toString(), random);
             timeSeriesKafkaTemplate.sendDefault(random_process, avroTimeSeriesDataPoint);
 
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
 
     }

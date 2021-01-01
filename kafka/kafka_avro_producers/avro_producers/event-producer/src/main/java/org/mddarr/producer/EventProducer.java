@@ -72,36 +72,48 @@ public class EventProducer {
 
 
         DefaultKafkaProducerFactory<String, AvroTimeSeriesDataPoint> pf1 = new DefaultKafkaProducerFactory<>(props);
-        KafkaTemplate<String, AvroTimeSeriesDataPoint> rideRequestKafkaTemplate = new KafkaTemplate<>(pf1, true);
-        rideRequestKafkaTemplate.setDefaultTopic(Constants.TIME_SERIES_TOPIC);
+        KafkaTemplate<String, AvroTimeSeriesDataPoint> timeSeriesKafkaTemplate = new KafkaTemplate<>(pf1, true);
+        timeSeriesKafkaTemplate.setDefaultTopic(Constants.TIME_SERIES_TOPIC);
         List<String> keys = new ArrayList<>(Arrays.asList("proccess1", "proccess2", "proccess3"));
 
         Random rand = new Random();
 
 
-        WeightedRandomBag<String> itemDrops = new EventProducer.WeightedRandomBag<>();
+        WeightedRandomBag<String> processes = new EventProducer.WeightedRandomBag<>();
 
-// Setup - a real game would read this information from a configuration file or database
-        itemDrops.addEntry("10 Gold",  5.0);
-        itemDrops.addEntry("Sword",   20.0);
-        itemDrops.addEntry("Shield",  45.0);
-        itemDrops.addEntry("Armor",   20.0);
-        itemDrops.addEntry("Potion",  10.0);
+        processes.addEntry("process1",  5.0);
+        processes.addEntry("process2",   20.0);
+        processes.addEntry("process3",  45.0);
+        processes.addEntry("process4",   20.0);
+        processes.addEntry("process5",  10.0);
 
-        for (int i = 0; i < 20; i++) {
-            System.out.println(itemDrops.getRandom());
+//        put("process2",5000L);
+//        put("process3",7500L);
+//        put("process4",15000L);
+//        put("process5",2000L);
+        Map<String, List<Long>> process_average_value_and_standard_deviations = new HashMap<String, List<Long>>(){{
+            put("process1", new ArrayList<>(Arrays.asList(1000L, 3L)));
+            put("process2", new ArrayList<>(Arrays.asList(5000L, 10L)));
+            put("process3", new ArrayList<>(Arrays.asList(1500L, 15L)));
+            put("process4", new ArrayList<>(Arrays.asList(15L, 2L)));
+            put("process5", new ArrayList<>(Arrays.asList(75L, 15L)));
+        }};
+
+
+        while(true){
+            String random_process = processes.getRandom();
+            List<Long> average_and_mean = process_average_value_and_standard_deviations.get(random_process);
+            Long average_value = average_and_mean.get(0);
+            Long standard_deviation = average_and_mean.get(1);
+
+            Double random = rand.nextGaussian()*standard_deviation+average_value;
+
+            System.out.println("Writing ride request for '" + random_process + "' to input topic " + Constants.TIME_SERIES_TOPIC + "with value " + random );
+            AvroTimeSeriesDataPoint avroTimeSeriesDataPoint = new AvroTimeSeriesDataPoint(UUID.randomUUID().toString(), random);
+            timeSeriesKafkaTemplate.sendDefault(random_process, avroTimeSeriesDataPoint);
+
+            Thread.sleep(1000);
         }
-
-
-//        while(true){
-//            int randomIndex = rand.nextInt(keys.size());
-//            String random_process = keys.get(randomIndex);
-//
-//
-////            System.out.println("Writing ride request for '" + rideRequest.getRequestId() + "' to input topic " +
-////                    Constants.RIDE_REQUEST_TOPIC);
-////            rideRequestKafkaTemplate.sendDefault(rideRequest);
-//        }
 
     }
 //

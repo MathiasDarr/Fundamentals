@@ -1,0 +1,8 @@
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroRideRequest",
+ "fields": [
+     {"name": "user_id", "type": "string"},
+     {"name": "riders",  "type": "int"}
+ ]
+}

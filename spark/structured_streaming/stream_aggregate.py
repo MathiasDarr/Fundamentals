@@ -60,7 +60,7 @@ def proces_grouped_by_dataframe(row):
     print(row)
 
 def process_deserialized_row(row):
-    print("THE DEESRIALIZED ROW LOOKIS LIKE ")
+    print("THE DESERIALIZED ROW LOOKS LIKE ")
     print(row)
 
 # `from_avro` requires Avro schema in JSON string format.
@@ -74,48 +74,55 @@ streamingDF = spark\
   .load()
 
 
-# streamingDataFrameGroupedByKeyCount = streamingDF \
-#     .withWatermark("timestamp", "1 minutes") \
-#     .groupBy(F.col("key"), "timestamp") \
-#     .count()
-
 windowedCounts = streamingDF.groupBy(
     window(streamingDF.timestamp, windowDuration, slideDuration),
     streamingDF.key
 ).count().orderBy('window')
 
+print("THE TYPE IS")
+print(type(streamingDF))
 
-# windowedDF = windowedCounts\
-#   .writeStream \
-#     .outputMode('complete') \
-#     .format('console') \
-#     .option('truncate', 'false') \
-#     .format("kafka")\
+
+from pyspark.sql.functions import udf, array
+from pyspark.sql.types import DoubleType
+
+deserialize_row_udf = udf(lambda x: process_row(x), DoubleType())
+
+deserialized_value_dataframe = streamingDF.withColumn('deserialized_value', streamingDF['value'])
+
+
+print("THE TYPE OF deserialized_value_dataframe  ")
+print(type(streamingDF))
+
+deserialized_value_dataframe.writeStream\
+    .format("parquet")\
+    .outputMode("append")\
+    .option("path", "data")\
+    .trigger(processingTime="5 seconds")\
+    .option("checkpointLocation", "path/to/checkpoint/dir")\
+    .start()
+
+# deserialized_value_dataframe.writeStream \
+#     .foreach(process_deserialized_row) \
 #     .start()
 
-# avroDF = streamingDF\
-#   .writeStream\
-#   .format("kafka")\
-#   .foreach(proces_grouped_by_dataframe)\
-#   .start()
 
-# .option("checkpointLocation", "checkpoints") \
-#     .option("kafka.bootstrap.servers", "localhost:9092") \
-#     .option("topic", "time-series-out") \
-#  \
+# # deserializedDF = streamingDF\
+# #   .writeStream\
+# #   .foreach(process_row)\
+# #   .start()
+# #
+#
 
-deserializedDF = streamingDF\
-  .writeStream\
-  .foreach(process_row)\
-  .start()
+#
+#
+# deserializedStream = deserialized_value_dataframe\
+#   .writeStream()\
 
-
-
-deserializedDF.show()
-
-# outputDF = deserializedDF\
-#   .writeStream\
-#   .foreach(process_deserialized_row)\
-#   .start()
-
+#
+# # outputDF = deserializedDF\
+# #   .writeStream\
+# #   .foreach(process_deserialized_row)\
+# #   .start()
+# #
 spark.streams.awaitAnyTermination()

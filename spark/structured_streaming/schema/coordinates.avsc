@@ -1,9 +1,0 @@
-{"namespace" : "org.mddarr.rides.event.dto",
- "type": "record",
- "name": "AvroRideCoordinate",
- "fields": [
-     {"name": "rideid", "type": "string"},
-     {"name": "latitude", "type": "double"},
-     {"name": "longitude", "type": "double"}
- ]
-}

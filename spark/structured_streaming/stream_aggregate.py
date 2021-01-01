@@ -32,7 +32,7 @@ def getSparkInstance():
 
 spark = getSparkInstance()
 
-def process_row(row):
+def process_row(serialized_data):
     schema = '''
     {
     "namespace": "org.mddarr.rides.event.dto",
@@ -44,12 +44,10 @@ def process_row(row):
      ]
     }
     '''
-    # print("THE ROW LOOKS LIKE")
-    # print(row.value)
     schemaRegistryClient = SchemaRegistryClient({"url": "http://localhost:8081"})
     avroDeserializer = AvroDeserializer(schema, schemaRegistryClient)
     serializationContext = SerializationContext("time-series", schema)
-    deserialized_row = avroDeserializer(row.value, serializationContext)
+    deserialized_row = avroDeserializer(serialized_data, serializationContext)
     # print("DESERIALIZED ROW")
     # print(str(deserialized_row))
     return deserialized_row['value']
@@ -86,20 +84,20 @@ print(type(streamingDF))
 from pyspark.sql.functions import udf, array
 from pyspark.sql.types import DoubleType
 
-deserialize_row_udf = udf(lambda x: process_row(x), DoubleType())
-
-deserialized_value_dataframe = streamingDF.withColumn('deserialized_value', streamingDF['value'])
+# deserialize_row_udf = udf(lambda x: process_row(x), DoubleType())
+#
+# deserialized_value_dataframe = streamingDF.withColumn('deserialized_value', deserialize_row_udf(streamingDF['value']))
 
 
 print("THE TYPE OF deserialized_value_dataframe  ")
 print(type(streamingDF))
 
-deserialized_value_dataframe.writeStream\
+streamingDF.writeStream\
     .format("parquet")\
     .outputMode("append")\
     .option("path", "data")\
+    .option("checkpointLocation","checkpoints")\
     .trigger(processingTime="5 seconds")\
-    .option("checkpointLocation", "path/to/checkpoint/dir")\
     .start()
 
 # deserialized_value_dataframe.writeStream \

@@ -66,3 +66,11 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+
+
+
+volumes:
+  postgres_data:
+  data-volume: {}
+  cassandra_data:
+    driver: local

@@ -1,41 +1,5 @@
 version: '2'
 services:
-  #  mysql:
-  #    image: mariadb
-  #    ports:
-  ##      - "3306:3306"
-  #    environment:
-  #      MYSQL_ROOT_PASSWORD: pwd
-  #      MYSQL_DATABASE: sample_mysql_db
-  #    volumes:
-  #      - data-volume:/var/lib/mysql
-
-
-#  postgres:
-#    image: debezium/example-postgres:${DEBEZIUM_VERSION}
-#    ports:
-#      - 5432:5432
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=postgresdb
-#    container_name: postgres
-#
-  cassandra:
-    container_name: cassandra
-    image: 'bitnami/cassandra:3'
-    ports:
-      - '7000:7000'
-      - '9042:9042'
-
-    environment:
-      - CASSANDRA_SEEDS=cassandra
-      - CASSANDRA_PASSWORD_SEEDER=yes
-      - CASSANDRA_PASSWORD=cassandra
-      - CASSANDRA_TRANSPORT_PORT_NUMBER=7000
-    volumes:
-      -  'cassandra_data:/bitnami'
-
   zookeeper:
     image: debezium/zookeeper:${DEBEZIUM_VERSION}
     ports:
@@ -52,7 +16,7 @@ services:
     environment:
       - ZOOKEEPER_CONNECT=zookeeper:2181
     container_name: kafka
-  #
+#
   schema-registry:
     image: confluentinc/cp-schema-registry
     ports:
@@ -83,9 +47,9 @@ services:
       CONNECT_CONFIG_STORAGE_TOPIC: _kafka-connect-540-configs
       CONNECT_OFFSET_STORAGE_TOPIC: _kafka-connect-540-offsets
       CONNECT_STATUS_STORAGE_TOPIC: _kafka-connect-540-status
-      #      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      #      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+#      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+#      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
@@ -102,9 +66,3 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
-
-volumes:
-  postgres_data:
-  data-volume: {}
-  cassandra_data:
-    driver: local

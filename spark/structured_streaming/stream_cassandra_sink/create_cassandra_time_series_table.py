@@ -42,3 +42,5 @@ if __name__ == '__main__':
     create_time_series_table()
     print("CASSANDRA TIME SERIES TABLE HAS BEEN CREATED")
 
+
+

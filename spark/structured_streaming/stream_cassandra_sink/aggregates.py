@@ -1,14 +1,19 @@
-import findspark
+"""
+This spark job reads a stream from a kafka topic where the values are serialized using avro.  Using confluent_kafka python library to deserialize avro data using the schema registry (spark-avro does not support this).  Data is written to a kafka-sink.
 
+"""
+import findspark
 findspark.init()
 import pyspark as ps
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroDeserializer
 from confluent_kafka.serialization import SerializationContext
 from pyspark.sql.functions import udf, array
-from pyspark.sql.types import StringType, DoubleType
+from pyspark.sql.types import DoubleType, StringType
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
+
+
 
 windowSize = 5
 slideSize = 3
@@ -20,9 +25,6 @@ def getSparkInstance():
     """
     @return: Return Spark session
     """
-    # java8_location = '/usr/lib/jvm/java-8-openjdk-amd64' # Set your own
-    # os.environ['JAVA_HOME'] = java8_location
-
     spark = ps.sql.SparkSession.builder \
         .master("local[4]") \
         .appName("individual") \
@@ -33,7 +35,7 @@ def getSparkInstance():
 spark = getSparkInstance()
 
 
-def deserialize_avro_column_row(serialized_data):
+def process_row(serialized_data):
     schema = '''
     {
     "namespace": "org.mddarr.rides.event.dto",
@@ -51,10 +53,6 @@ def deserialize_avro_column_row(serialized_data):
     deserialized_row = avroDeserializer(serialized_data, serializationContext)
     return deserialized_row['value']
 
-    # def close(self, error):
-    #     # Close the connection. This method in optional in Python.
-    #     pass
-
 
 streamingDF = spark \
     .readStream \
@@ -64,53 +62,46 @@ streamingDF = spark \
     .option('includeTimestamp', 'true') \
     .load()
 
-deserialize_row_udf = udf(lambda x: deserialize_avro_column_row(x), DoubleType())
+deserialize_row_udf = udf(lambda x: process_row(x), DoubleType())
 
 deserialized_value_dataframe = streamingDF.withColumn('deserialized_value', deserialize_row_udf("value"))
-deserialized_value_dataframe = deserialized_value_dataframe.select(['key', 'timestamp', 'deserialized_value'])
+deserialized_value_dataframe = deserialized_value_dataframe.select(['key','timestamp','deserialized_value'])
 
 deserialized_value_dataframe.drop('value')
 deserialized_value_dataframe = deserialized_value_dataframe.withColumnRenamed('deserialized_value', 'value')
 
 
-
-
-#     .outputMode("append")\
-
-class ForeachWriter:
-    def open(self, partition_id, epoch_id):
-        # Open connection. This method is optional in Python.
-        pass
-
-    def process(self, row):
-        # Write row to connection. This method is NOT optional in Python.
-        print("THE ROW LOOKS LIKE")
-
-    def close(self, error):
-        # Close the connection. This method in optional in Python.
-        pass
-
-def process_row(row):
+def print_row(row):
     print("THE ROW LOOKS LIKE")
     print(row)
+    insert_time_series_data_point = """INSERT INTO time_series(processID, time, value) VALUES(%s,%s,%s);"""
+
+    dbsession = initialize_cassanrdra_session()
+
+    try:
+        dbsession.set_keyspace('ks1')
+        dbsession.execute(insert_time_series_data_point, [row['key'], row['timestamp'], row['value']])
+        print("AFTER THE QUERY WAS EXECUTED")
+    except Exception as e:
+        print(e)
 
 
-query = deserialized_value_dataframe.writeStream.foreach(ForeachWriter()).start()
+def initialize_cassanrdra_session():
+    auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
+    try:
+        cluster = Cluster(["127.0.0.1"], auth_provider=auth_provider)
+        session = cluster.connect()
+        return session
+    except Exception as e:
+        print(e)
+        return None
 
 
 ds = deserialized_value_dataframe \
-  .writeStream \
-  .foreach(process_row) \
-  .trigger(processingTime="5 seconds") \
-  .start()
-
-
-
-# cassandra_sink_stream = deserialized_value_dataframe \
-#     .writeStream \
-#     .foreach(process_row)\
-#     .format("console")\
-#     .trigger(processingTime="5 seconds")\
-#     .start()
+    .selectExpr("value", "CAST(key AS STRING)", "timestamp") \
+    .writeStream \
+    .foreach(print_row) \
+    .trigger(processingTime="5 seconds") \
+    .start()
 
 spark.streams.awaitAnyTermination()

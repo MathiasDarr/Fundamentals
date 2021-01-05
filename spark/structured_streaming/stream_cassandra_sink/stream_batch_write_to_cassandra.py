@@ -14,7 +14,6 @@ from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 
 
-
 windowSize = 5
 slideSize = 3
 windowDuration = '{} seconds'.format(windowSize)
@@ -72,16 +71,12 @@ deserialized_value_dataframe = deserialized_value_dataframe.withColumnRenamed('d
 
 
 def print_row(row):
-    print("THE ROW LOOKS LIKE")
-    print(row)
     insert_time_series_data_point = """INSERT INTO time_series(processID, time, value) VALUES(%s,%s,%s);"""
-
     dbsession = initialize_cassanrdra_session()
 
     try:
         dbsession.set_keyspace('ks1')
         dbsession.execute(insert_time_series_data_point, [row['key'], row['timestamp'], row['value']])
-        print("AFTER THE QUERY WAS EXECUTED")
     except Exception as e:
         print(e)
 

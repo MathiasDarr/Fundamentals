@@ -1,7 +1,7 @@
 version: '2'
 services:
   postgres:
-    image: debezium/example-postgres:${DEBEZIUM_VERSION}
+    image: debezium/postgres:12
     ports:
       - 5432:5432
     environment:
@@ -12,14 +12,14 @@ services:
 
 
   zookeeper:
-    image: debezium/zookeeper:${DEBEZIUM_VERSION}
+    image: debezium/zookeeper:1.1
     ports:
       - 2181:2181
       - 2888:2888
       - 3888:3888
     container_name: zookeeper
   kafka:
-    image: debezium/kafka:${DEBEZIUM_VERSION}
+    image: debezium/kafka:1.1
     ports:
       - 9092:9092
     links:

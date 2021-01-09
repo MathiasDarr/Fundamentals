@@ -1,0 +1,45 @@
+[
+{"namespace": "org.mddarr.orders.event.dto",
+ "type": "enum",
+ "name": "OrderState",
+ "symbols" : ["PENDING", "VALIDATED", "OUT_OF_STOCK", "STOCKED", "FAILED", "SHIPPED"]
+},
+
+{"namespace": "org.mddarr.orders.event.dto",
+ "type": "record",
+ "name": "FirstOrder",
+ "fields": [
+     {"name": "id", "type": "string"},
+     {"name": "customerId", "type": "string"}
+ ]
+},
+
+
+{"namespace": "org.mddarr.orders.event.dto",
+ "type": "record",
+ "name": "AvroOrder",
+ "fields": [
+     {"name": "id", "type": "string"},
+     {"name": "customerId", "type": "string"},
+     {"name": "state", "type": "OrderState"},
+     {"name":"vendors", "type": { "type": "array", "items": "string" } },
+     {"name":"products", "type": { "type": "array", "items": "string" } },
+     {"name":"quantites",   "type": { "type": "array", "items": "long" } },
+     {"name": "price", "type": "double"}
+ ]
+},
+
+
+{"namespace": "org.mddarr.orders.event.dto",
+ "type": "record",
+ "name": "ValidatedOrder",
+ "fields": [
+     {"name": "id", "type": "string"},
+     {"name": "productID", "type": "string"},
+     {"name": "state", "type": "OrderState"},
+     {"name":"quantity", "type": "long"},
+     {"name": "price", "type": "double"}
+ ]
+}
+
+]

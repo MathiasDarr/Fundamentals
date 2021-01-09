@@ -1,0 +1,8 @@
+{"namespace": "org.mddarr.customers",
+ "type": "record",
+ "name": "AvroCustomer",
+ "fields": [
+     {"name": "customerid", "type": "string"},
+     {"name": "city",   "type": "string"}
+ ]
+}

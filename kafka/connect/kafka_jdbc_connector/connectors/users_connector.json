@@ -8,6 +8,7 @@
     "connection.password": "postgres",
     "table.whitelist" : "users_schema.information",
     "topic.prefix": "prefix",
-    "mode":"bulk"
+    "mode":"timestamp",
+    "timestamp.column.name": "update_ts"
  }
 }

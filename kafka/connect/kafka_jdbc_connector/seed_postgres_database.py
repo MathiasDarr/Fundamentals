@@ -15,7 +15,8 @@ def create_users_table():
     create_users_table = """
             SET search_path TO users_schema,public;
             CREATE TABLE IF NOT EXISTS users_schema.information(
-                    userid VARCHAR(50) PRIMARY KEY
+                    userid VARCHAR(50) PRIMARY KEY,
+                    UPDATE_TS timestamp NOT NULL
             );
     """
     cur.execute(create_users_table)
@@ -33,7 +34,7 @@ def create_users_table():
 def populate_users_table():
     insert_into_users_table = """
     SET search_path TO users_schema;
-    INSERT INTO users_schema.information(userid) VALUES(%s);"""
+    INSERT INTO users_schema.information(userid, UPDATE_TS) VALUES(%s, current_timestamp);"""
 
     cur.execute(insert_into_users_table, [str(uuid.uuid4())])
     cur.execute(insert_into_users_table, [str(uuid.uuid4())])

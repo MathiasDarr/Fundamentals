@@ -27,9 +27,6 @@ public class EventProducer {
 
         System.out.println(user3);
 
-
-
-
         System.out.println("dfdf");
 
         EagerInitSingletonClass eagerInitSingletonClass = EagerInitSingletonClass.getInstance();

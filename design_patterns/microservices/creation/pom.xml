@@ -13,8 +13,7 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>avro-schema</module>
-        <module>event-producer</module>
+        <module>singleton</module>
 <!--        <module>processing-service</module>-->
 
     </modules>

@@ -19,7 +19,7 @@
 		<java.version>11</java.version>
 	</properties>
 	<modules>
-		<module>materialized-views</module>
+		<module>creation</module>
 	</modules>
 
 	<repositories>

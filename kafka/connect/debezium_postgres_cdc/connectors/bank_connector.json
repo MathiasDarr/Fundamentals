@@ -1,0 +1,13 @@
+{
+  "name": "sde-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.dbname": "postgresdb",
+    "database.server.name": "bankserver1",
+    "table.whitelist": "bank.holding"
+  }
+}

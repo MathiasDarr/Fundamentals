@@ -1,0 +1,17 @@
+{
+  "name": "account-jdbc-source",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": false,
+    "tasks.max": "1",
+    "connection.url": "jdbc:postgres://postgresdb:5432",
+    "connection.user": "postgres",
+    "connection.password": "postgres",
+    "mode": "timestamp",
+    "timestamp.column.name": "update_date",
+    "table.whitelist": "users_schema",
+    "topic.prefix": "",
+    "name": "account-jdbc-source"
+ }
+}

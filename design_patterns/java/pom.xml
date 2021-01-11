@@ -20,6 +20,8 @@
 	</properties>
 	<modules>
 		<module>creation</module>
+		<module>iterator</module>
+		<module>behavior</module>
 	</modules>
 
 	<repositories>

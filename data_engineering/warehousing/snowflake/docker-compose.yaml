@@ -1,0 +1,5 @@
+version: '2'
+services:
+  snowflake:
+    build: .
+    container_name: snowflake_container

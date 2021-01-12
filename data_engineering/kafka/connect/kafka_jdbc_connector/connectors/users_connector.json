@@ -1,0 +1,14 @@
+{
+  "name": "users-connector",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "connection.url": "jdbc:postgresql://postgres:5432/postgresdb",
+    "connection.user": "postgres",
+    "connection.password": "postgres",
+    "table.whitelist" : "users_schema.information",
+    "topic.prefix": "prefix",
+    "mode":"timestamp",
+    "timestamp.column.name": "update_ts"
+ }
+}

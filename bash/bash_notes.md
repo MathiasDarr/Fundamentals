@@ -1,1 +1,0 @@
-the -z flag is a parameter to the bash's test (conditional if else) command that is built into the shell.  The -z flag causes test to check wheter a string is empty.  Returns true if the string is empty, false if it contains something

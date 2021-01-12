@@ -1,0 +1,8 @@
+{"namespace" : "org.mddarr.rides.event.dto",
+ "type": "record",
+ "name": "AvroTimeSeriesDataPoint",
+ "fields": [
+     {"name": "dataID", "type": "string"},
+     {"name": "value", "type": "double"}
+ ]
+}

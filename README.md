@@ -8,12 +8,15 @@ This repostiory contains demonstrations/references of fundamental software & dat
 
 
 ### Data Engineering ###
-* [Apache Airflow Fundamentals](data_modeling/cassandra/README.md)
-* [Apache Kafka & KStreams Fundamentals](data_modeling/cassandra/README.md)
-* [Apache Spark Fundamentals](data_modeling/cassandra/README.md)
+* [Apache Airflow Fundamentals](data_engineering/airflow/README.md)
+* [Apache Kafka & KStreams Fundamentals](data_engineering/kafka/README.md)
+* [Apache Spark Fundamentals](data_engineering/spark/README.md)
     * SparkML
     * Spark Structured Streaming
     * Spark Dataframe operations
+
+* [Snowflake Fundamentals](data_engineering/snowflake/README.md)
+
 
 ### Hadoop ###
 * [Hadoop Fundamentals](hadoop/README.md)

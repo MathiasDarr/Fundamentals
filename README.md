@@ -1,6 +1,6 @@
 ## Fundamentals ##
 
-This repostiory contains demonstrations/references of fundamental software & data engineering skills
+This repository contains demonstrations/references of fundamental software & data engineering skills
     
 ### Data Modeling ###
 * [Cassandra Data Modeling](data_modeling/cassandra/README.md)

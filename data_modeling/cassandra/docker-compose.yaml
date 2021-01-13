@@ -1,0 +1,25 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:12
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgresdb
+    container_name: postgres
+
+  cassandra:
+    container_name: cassandra
+    image: 'bitnami/cassandra:3'
+    ports:
+      - '7000:7000'
+      - '9042:9042'
+
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD=cassandra
+      - CASSANDRA_TRANSPORT_PORT_NUMBER=7000
+      - CASSANDRA_ENABLE_USER_DEFINED_FUNCTIONS=true

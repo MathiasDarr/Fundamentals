@@ -1,17 +1,17 @@
-package org.mddarr.reactive.cassandra.repositories;
-
-import org.mddarr.reactive.cassandra.models.Employee;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+package org.mddarr.reative.functions.flux;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 @Repository
 public class EmployeeRepository {
     
-    static Map<String, Employee> employeeData;
+    static Map<String,Employee> employeeData;
 
     static Map<String,String> employeeAccessData;
 

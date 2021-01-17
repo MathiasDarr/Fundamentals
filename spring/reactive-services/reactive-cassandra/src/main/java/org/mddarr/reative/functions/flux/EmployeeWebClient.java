@@ -1,7 +1,7 @@
-package org.mddarr.reactive.cassandra.webclients;
+package org.mddarr.reative.functions.flux;
 
-import org.mddarr.reactive.cassandra.models.Employee;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

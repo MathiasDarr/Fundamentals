@@ -16,8 +16,6 @@
 <!--        <module>reactive-cassandra</module>-->
         <module>reactive-functional-interface</module>
 
-<!--        <module>reactive-functional-interface</module>-->
-
 
     </modules>
 

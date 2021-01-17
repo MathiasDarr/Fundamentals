@@ -1,4 +1,4 @@
-package org.mddarr.reactive.cassandra.config;
+package org.mddarr.reative.functions.config;
 
 
 
@@ -9,10 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
+import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.mapping.CassandraMappingContext;
 import org.springframework.data.cassandra.core.mapping.SimpleUserTypeResolver;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
+import org.springframework.util.Assert;
 
 @Configuration
 @EnableCassandraRepositories(basePackages = "org.mddarr.ride.query.service.repository")

@@ -1,5 +1,6 @@
-package org.mddarr.reactive.cassandra.models;
+package org.mddarr.reative.functions.flux;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
